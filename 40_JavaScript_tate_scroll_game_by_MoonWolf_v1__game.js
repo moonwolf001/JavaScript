@@ -17,6 +17,7 @@
 // ※MoonWolf(むーんうるふ)ツイッター：https://twitter.com/MoonWolf_001
 // ※MoonWolfのPascal、Python書籍：https://www.amazon.co.jp/stores/MoonWolf/author/B0CD3151FX
 // 動作テスト環境：Windows11＋Chromeブラウザー / 2024.May.17
+// 開発環境：Windows11 + Note++(エディター) + ChatGPT4o + Chromeプラウザー
 //-------------------------------------------------------------------------------------------------
 
 // Canvas要素の取得と2D描画コンテキストの初期化

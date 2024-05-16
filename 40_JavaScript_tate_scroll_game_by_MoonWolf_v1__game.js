@@ -15,6 +15,7 @@
 // ※Const(定数)の値をいじってみると、色々と変化を楽しめます。
 // ※MoonWolf(むーんうるふ)ツイッター：https://twitter.com/MoonWolf_001
 // ※MoonWolfのPascal、Python書籍：https://www.amazon.co.jp/stores/MoonWolf/author/B0CD3151FX
+// 動作テスト環境：Windows11＋Chromeブラウザー / 2024.May.17
 //-------------------------------------------------------------------------------------------------
 
 // Canvas要素の取得と2D描画コンテキストの初期化

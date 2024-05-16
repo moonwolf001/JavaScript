@@ -6,7 +6,7 @@
 // 動かし方：
 // [1] フォルダーを作成
 // [2] このJavaScriptファイルを、そのフォルダーにgame.jsとして保存
-// このファイルとはこちら：
+// このファイルとはこちら：https://github.com/moonwolf001/JavaScript/blob/main/40_JavaScript_tate_scroll_game_by_MoonWolf_v1__game.js
 // [3] HTMLファイルを同じフォルダーにindex.htmlとして保尊
 // HTMLファイルはこちら：https://github.com/moonwolf001/JavaScript/blob/main/30_html1_index.html
 // [4] index.htmlファイルを、インターネット・ブラウザーにドラッグ＆ドロップ

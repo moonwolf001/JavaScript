@@ -4,15 +4,16 @@
 // 操作：マウスで自機を上下左右、スペースキーで弾を発射
 //
 // 動かし方：
-// [1] フォルダーを作成
-// [2] このJavaScriptファイルを、そのフォルダーにgame.jsとして保存
+// [1] フォルダーを作成(デスクトップなどに)
+// [2] このJavaScriptファイルを、その作成したフォルダーにgame.jsとして保存
 // このファイルとはこちら：https://github.com/moonwolf001/JavaScript/blob/main/40_JavaScript_tate_scroll_game_by_MoonWolf_v1__game.js
-// [3] HTMLファイルを同じフォルダーにindex.htmlとして保尊
+// [3] HTMLファイルを同じく作成したフォルダーにindex.htmlとして保尊
 // HTMLファイルはこちら：https://github.com/moonwolf001/JavaScript/blob/main/30_html1_index.html
 // [4] index.htmlファイルを、インターネット・ブラウザーにドラッグ＆ドロップ
+// 以上
 //
-// ※商用配布をしない限り、プログラムの研究として自由にお使いください。
-// ※Const(定数)の値をいじってみると、色々と変化を楽しめます。
+// ※商用配布をしない限り、コンピュータ・プログラミングの研究として、ご自由にお使いください。
+// ※Const(定数)の値をいじってみると、色々とゲームの変化を楽しめます。
 // ※MoonWolf(むーんうるふ)ツイッター：https://twitter.com/MoonWolf_001
 // ※MoonWolfのPascal、Python書籍：https://www.amazon.co.jp/stores/MoonWolf/author/B0CD3151FX
 // 動作テスト環境：Windows11＋Chromeブラウザー / 2024.May.17

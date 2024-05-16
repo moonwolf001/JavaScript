@@ -1,4 +1,4 @@
-// (c)2024 MoonWolf JavaScript Tate-Scroll Game ver 0.02
+// (c)2024 MoonWolf JavaScript Tate-Scroll Game ver 0.03
 
 // Canvas要素の取得と2D描画コンテキストの初期化
 const canvas = document.getElementById('gameCanvas');
@@ -22,9 +22,9 @@ const player = {
 // 敵と弾の配列
 const enemies = [];
 const bullets = [];
-const enemyCount = 30;
+const enemyCount = 31;  // Max31
 const bulletSpeed = 7;
-const bulletRadius = 3;
+const bulletRadius = 4;
 const bulletColor = 'yellow';
 const enemyColors = ['cyan', 'blue', 'red', 'orange', 'yellow', 'green']; // 敵の色の配列
 
@@ -106,11 +106,15 @@ function drawEnemies() {
     enemies.forEach((enemy, index) => {
         ctx.fillStyle = enemy.color;
         ctx.fillRect(enemy.x, enemy.y, enemy.size, enemy.size);
-        enemy.x += enemy.dx * enemy.speed;
-        enemy.y += enemy.dy * enemy.speed;
-        if (enemy.x < -enemy.size || enemy.x > canvas.width || enemy.y > canvas.height) {
-            enemies.splice(index, 1);
-            createEnemy();
+        // ゲームがアクティブな場合のみ敵の位置を更新
+        if (gameActive) {
+            enemy.x += enemy.dx * enemy.speed;
+            enemy.y += enemy.dy * enemy.speed;
+            // 画面外に出た敵を再生成
+            if (enemy.x < -enemy.size || enemy.x > canvas.width || enemy.y > canvas.height) {
+                enemies.splice(index, 1);
+                createEnemy();
+            }
         }
     });
 }
@@ -159,18 +163,22 @@ function drawScore() {
     ctx.fillText('Score: ' + score, 10, 20);
 }
 
-// ゲームオーバー時の処理
-function gameOver() {
-    gameActive = false;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+// ゲームオーバー時のメッセージ描画関数
+function drawGameOver() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);  // 画面を暗くする
     ctx.font = '24px Arial';
     ctx.fillStyle = 'white';
     ctx.textAlign = 'center';
     ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2 - 20);
     ctx.fillText('Your Score = ' + score, canvas.width / 2, canvas.height / 2 + 10);
-    ctx.fillText('Hit Return Key to Replay', canvas.width / 2, canvas.height / 2 + 40);
+    ctx.fillText('Hit Return Key to Restart', canvas.width / 2, canvas.height / 2 + 40);
+}
+
+// ゲームオーバー時の処理
+function gameOver() {
+    gameActive = false;  // ゲームのアクティブ状態を変更
+    drawGameOver();  // ゲームオーバーメッセージを描画
 }
 
 // ゲームをリスタートする関数
@@ -182,17 +190,20 @@ function restartGame() {
     player.x = canvas.width / 2;
     player.y = canvas.height - 30;
     createEnemies();
+    drawGameOver();
 }
 
 // ゲームの状態を更新し、描画を続ける関数
 function update() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawPlayer();
+    drawEnemies();
+    drawBullets();
     if (gameActive) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawPlayer();
-        drawEnemies();
-        drawBullets();
         collisionDetection();
         drawScore();
+    } else {
+        drawGameOver();
     }
     requestAnimationFrame(update);
 }

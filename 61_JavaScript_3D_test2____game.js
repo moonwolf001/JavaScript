@@ -1,3 +1,6 @@
+// (c)2024 MoonWolf , JavaScript Simple 3D game
+// 操作方法：マウスで迫りくる立体をよけるだけ
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,41 +8,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Avoidance Game</title>
     <style>
-        body { margin: 0; }
-        canvas { display: block; }
-        #gameOverMessage {
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: white; /* 背景色を白に設定 */
+        }
+        #gameCanvas, #overlay {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 24px;
-            color: white;
-            text-align: center;
-            display: none;
+        }
+        #overlay {
+            pointer-events: none;
+            z-index: 1; /* ゲームキャンバスの上に表示 */
         }
     </style>
 </head>
 <body>
-    <div id="gameOverMessage">
-        Game Over<br>
-        Hit Return Key to Restart
-    </div>
+    <canvas id="gameCanvas"></canvas>
+    <canvas id="overlay"></canvas>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        let scene, camera, renderer;
+        let scene, camera, renderer, overlay, overlayContext;
         let cubes = [];
         const canvasWidth = 800;
         const canvasHeight = 600;
         const playerPosition = { x: 0, y: 0 };
+        const playerSize = 60; // プレイヤーの当たり判定用サイズ
         let gameActive = true;
-        const gameOverMessage = document.getElementById('gameOverMessage');
 
         // 調整可能な定数
-        const CUBE_COUNT = 15;
-        const CUBE_MIN_SIZE = 80;
+        const CUBE_COUNT = 30;
+        const CUBE_MIN_SIZE = 30;
         const CUBE_MAX_SIZE = 150;
-        const CUBE_MIN_SPEED = 900;
-        const CUBE_MAX_SPEED = 1800;
+        const CUBE_MIN_SPEED = 1500;
+        const CUBE_MAX_SPEED = 3000;
+        const SPAWN_DISTANCE = -4000;  // 2倍の距離に設定
 
         // 初期化関数
         function init() {
@@ -47,13 +55,28 @@
             scene = new THREE.Scene();
 
             // カメラの設定
-            camera = new THREE.PerspectiveCamera(75, canvasWidth / canvasHeight, 0.1, 2000);
+            camera = new THREE.PerspectiveCamera(75, canvasWidth / canvasHeight, 0.1, 3000);
             camera.position.z = 500;
 
             // レンダラーの設定
-            renderer = new THREE.WebGLRenderer();
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('gameCanvas') });
             renderer.setSize(canvasWidth, canvasHeight);
-            document.body.appendChild(renderer.domElement);
+
+            // オーバーレイキャンバスの設定
+            overlay = document.getElementById('overlay');
+            overlay.width = canvasWidth;
+            overlay.height = canvasHeight;
+            overlayContext = overlay.getContext('2d');
+
+            // ライトの追加（上からの光）
+            const light1 = new THREE.DirectionalLight(0xffffff, 1);
+            light1.position.set(-1, 1, 1).normalize();
+            scene.add(light1);
+
+            // ライトの追加（右下からの光）
+            const light2 = new THREE.DirectionalLight(0xffffff, 0.5);
+            light2.position.set(1, -1, 1).normalize();
+            scene.add(light2);
 
             // 立方体の生成
             for (let i = 0; i < CUBE_COUNT; i++) {
@@ -62,7 +85,7 @@
                     THREE.MathUtils.randInt(CUBE_MIN_SIZE, CUBE_MAX_SIZE),
                     THREE.MathUtils.randInt(CUBE_MIN_SIZE, CUBE_MAX_SIZE)
                 );
-                const material = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff });
+                const material = new THREE.MeshPhongMaterial({ color: Math.random() * 0xffffff });
                 const cube = new THREE.Mesh(geometry, material);
                 resetCube(cube);
                 scene.add(cube);
@@ -81,9 +104,9 @@
 
         // 立方体の位置と回転をリセット
         function resetCube(cube) {
-            cube.position.x = (Math.random() - 0.5) * canvasWidth;
-            cube.position.y = (Math.random() - 0.5) * canvasHeight;
-            cube.position.z = -1000 - Math.random() * 1000;
+            cube.position.x = (Math.random() - 0.5) * canvasWidth * 1.5;
+            cube.position.y = (Math.random() - 0.5) * canvasHeight * 1.5;
+            cube.position.z = SPAWN_DISTANCE - Math.random() * 1000;
             cube.rotation.x = Math.random() * 2 * Math.PI;
             cube.rotation.y = Math.random() * 2 * Math.PI;
             cube.rotation.z = Math.random() * 2 * Math.PI;
@@ -128,7 +151,7 @@
                 if (cube.position.z > 0) {
                     const dx = cube.position.x - playerPosition.x;
                     const dy = cube.position.y - playerPosition.y;
-                    if (Math.abs(dx) < 50 && Math.abs(dy) < 50) {
+                    if (Math.abs(dx) < playerSize && Math.abs(dy) < playerSize) {
                         gameOver();
                         return;
                     }
@@ -139,15 +162,25 @@
             renderer.render(scene, camera);
         }
 
+        // ゲームオーバーメッセージのレンダリング関数
+        function renderGameOverMessage() {
+            overlayContext.clearRect(0, 0, canvasWidth, canvasHeight); // 画面をクリア
+            overlayContext.font = '24px Arial';
+            overlayContext.fillStyle = 'white';
+            overlayContext.textAlign = 'center';
+            overlayContext.fillText('Game Over', canvasWidth / 2, canvasHeight / 2 - 12);
+            overlayContext.fillText('Hit Return Key to Restart', canvasWidth / 2, canvasHeight / 2 + 12);
+        }
+
         // ゲームオーバー処理
         function gameOver() {
             gameActive = false;
-            gameOverMessage.style.display = 'block';
+            renderGameOverMessage();
         }
 
         // ゲーム再開処理
         function restartGame() {
-            gameOverMessage.style.display = 'none';
+            overlayContext.clearRect(0, 0, canvasWidth, canvasHeight); // オーバーレイをクリア
             gameActive = true;
             cubes.forEach(resetCube);
             animate();

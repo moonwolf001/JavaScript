@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 基礎演習</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #4682b4;
+        }
+        .example {
+            border: 1px solid #4682b4;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+        .result {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>JavaScript 基礎演習</h1>
+
+    <div class="example">
+        <h2>1. 加減乗除</h2>
+        <p id="arithmetic"></p>
+    </div>
+
+    <div class="example">
+        <h2>2. 比較演算子</h2>
+        <p id="comparison"></p>
+    </div>
+
+    <div class="example">
+        <h2>3. 繰り返し (for)</h2>
+        <p id="for-loop"></p>
+    </div>
+
+    <div class="example">
+        <h2>4. 繰り返し (while)</h2>
+        <p id="while-loop"></p>
+    </div>
+
+    <div class="example">
+        <h2>5. 条件分岐 (if)</h2>
+        <p id="if-statement"></p>
+    </div>
+
+    <div class="example">
+        <h2>6. 条件分岐 (switch)</h2>
+        <p id="switch-case"></p>
+    </div>
+
+    <div class="example">
+        <h2>7. 関数 (引数なし)</h2>
+        <p id="function-no-args"></p>
+    </div>
+
+    <div class="example">
+        <h2>8. 関数 (引数あり、戻り値なし)</h2>
+        <p id="function-args-no-return"></p>
+    </div>
+
+    <div class="example">
+        <h2>9. 関数 (引数あり、戻り値あり)</h2>
+        <p id="function-args-return"></p>
+    </div>
+
+    <script>
+        // 1. 加減乗除
+        let a = 10;
+        let b = 5;
+        let addition = a + b;
+        let subtraction = a - b;
+        let multiplication = a * b;
+        let division = a / b;
+        document.getElementById('arithmetic').innerHTML = `
+            ${a} + ${b} = ${addition}<br>
+            ${a} - ${b} = ${subtraction}<br>
+            ${a} * ${b} = ${multiplication}<br>
+            ${a} / ${b} = ${division}
+        `;
+
+        // 2. 比較演算子
+        let isEqual = (a == b);
+        let isNotEqual = (a != b);
+        let isGreater = (a > b);
+        let isLess = (a < b);
+        document.getElementById('comparison').innerHTML = `
+            ${a} == ${b} : ${isEqual}<br>
+            ${a} != ${b} : ${isNotEqual}<br>
+            ${a} > ${b} : ${isGreater}<br>
+            ${a} < ${b} : ${isLess}
+        `;
+
+        // 3. 繰り返し (for)
+        let forLoopResult = '';
+        for (let i = 0; i < 5; i++) {
+            forLoopResult += `i = ${i}<br>`;
+        }
+        document.getElementById('for-loop').innerHTML = forLoopResult;
+
+        // 4. 繰り返し (while)
+        let whileLoopResult = '';
+        let j = 0;
+        while (j < 5) {
+            whileLoopResult += `j = ${j}<br>`;
+            j++;
+        }
+        document.getElementById('while-loop').innerHTML = whileLoopResult;
+
+        // 5. 条件分岐 (if)
+        let ifResult = '';
+        if (a > b) {
+            ifResult = `${a}は${b}より大きい`;
+        } else {
+            ifResult = `${a}は${b}より小さいか等しい`;
+        }
+        document.getElementById('if-statement').innerHTML = ifResult;
+
+        // 6. 条件分岐 (switch)
+        let day = 3;
+        let dayName = '';
+        switch (day) {
+            case 0:
+                dayName = '日曜日';
+                break;
+            case 1:
+                dayName = '月曜日';
+                break;
+            case 2:
+                dayName = '火曜日';
+                break;
+            case 3:
+                dayName = '水曜日';
+                break;
+            case 4:
+                dayName = '木曜日';
+                break;
+            case 5:
+                dayName = '金曜日';
+                break;
+            case 6:
+                dayName = '土曜日';
+                break;
+            default:
+                dayName = '不明';
+        }
+        document.getElementById('switch-case').innerHTML = `今日は${dayName}です`;
+
+        // 7. 関数 (引数なし)
+        function sayHello() {
+            return 'こんにちは、JavaScript!';
+        }
+        document.getElementById('function-no-args').innerHTML = sayHello();
+
+        // 8. 関数 (引数あり、戻り値なし)
+        function greet(name) {
+            let greeting = `こんにちは、${name}さん!`;
+            document.getElementById('function-args-no-return').innerHTML = greeting;
+        }
+        greet('太郎');
+
+        // 9. 関数 (引数あり、戻り値あり)
+        function addNumbers(x, y) {
+            return x + y;
+        }
+        let sum = addNumbers(7, 3);
+        document.getElementById('function-args-return').innerHTML = `7 + 3 = ${sum}`;
+    </script>
+</body>
+</html>

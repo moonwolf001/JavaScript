@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript OOPの例 - 自動車クラス</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #4682b4;
+        }
+        .example {
+            border: 1px solid #4682b4;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+        .result {
+            font-weight: bold;
+        }
+        .car-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .car {
+            flex: 1;
+            margin: 0 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>JavaScript OOPの例 - 自動車クラス</h1>
+
+    <div class="example">
+        <h2>Publicメソッド一覧</h2>
+        <ul>
+            <li>handleSteering(direction)</li>
+            <li>pressAccelerator()</li>
+            <li>pressBrake()</li>
+            <li>changeGear(gear)</li>
+            <li>showDetails()</li>
+        </ul>
+    </div>
+
+    <div class="example">
+        <h2>日本の自動車クラスの設計図</h2>
+        <div class="car-container" id="car-details">
+            <!-- 自動車情報がここに挿入されます -->
+        </div>
+    </div>
+
+    <script>
+        // ベースクラス - 日本の自動車
+        class Car {
+            #engine;
+            #transmission;
+            #ecu;
+            #frame;
+            _speedDisplay;
+            _seatPosition;
+
+            constructor(manufacturer, year, model) {
+                this.manufacturer = manufacturer;
+                this.year = year;
+                this.model = model;
+                this.#engine = "2.0L Turbo";
+                this.#transmission = "6-speed manual";
+                this.#ecu = "Sport";
+                this.#frame = "Steel";
+                this._speedDisplay = "km/h";
+                this._seatPosition = "右シート";
+            }
+
+            handleSteering(direction) {
+                return `ステアリングを${direction}に切る`;
+            }
+
+            pressAccelerator() {
+                return "アクセルを踏む";
+            }
+
+            pressBrake() {
+                return "ブレーキを踏む";
+            }
+
+            changeGear(gear) {
+                return `ギアを${gear}に変える`;
+            }
+
+            showDetails() {
+                return `
+                    <p>メーカー: ${this.manufacturer}</p>
+                    <p>製造年: ${this.year}</p>
+                    <p>モデル: ${this.model}</p>
+                    <p>速度表示: ${this._speedDisplay}</p>
+                    <p>シート位置: ${this._seatPosition}</p>
+                `;
+            }
+        }
+
+        // 派生クラス - アメリカ向け自動車
+        class AmericanCar extends Car {
+            constructor(manufacturer, year, model) {
+                super(manufacturer, year, model);
+                this._speedDisplay = "mph";
+                this._seatPosition = "左シート";
+            }
+        }
+
+        // 派生クラス - ドイツ向け自動車
+        class GermanCar extends Car {
+            constructor(manufacturer, year, model) {
+                super(manufacturer, year, model);
+                this._speedDisplay = "km/h";
+                this._seatPosition = "左シート";
+            }
+        }
+
+        // インスタンスの作成
+        let japaneseCar = new Car("Nissan", 2024, "シルビアS25");
+        let americanCar = new AmericanCar("Nissan", 2024, "シルビアS25");
+        let germanCar = new GermanCar("Nissan", 2024, "シルビアS25");
+
+        // 結果の表示
+        document.getElementById('car-details').innerHTML = `
+            <div class="car">
+                <h3>日本向け自動車</h3>
+                ${japaneseCar.showDetails()}
+            </div>
+            <div class="car">
+                <h3>アメリカ向け自動車</h3>
+                ${americanCar.showDetails()}
+            </div>
+            <div class="car">
+                <h3>ドイツ向け自動車</h3>
+                ${germanCar.showDetails()}
+            </div>
+        `;
+    </script>
+</body>
+</html>

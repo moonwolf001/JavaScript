@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DOM Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hello, World!</h1>
+    <p>This is a paragraph.</p>
+    <div id="content">
+        <p>This is a new paragraph inside a div.</p>
+    </div>
+    <script>
+        // 新しいパラグラフ要素を作成
+        let newParagraph = document.createElement('p');
+        newParagraph.textContent = 'This is a dynamically added paragraph.';
+
+        // content divに新しいパラグラフを追加
+        document.getElementById('content').appendChild(newParagraph);
+
+        // h1要素の内容を変更
+        document.querySelector('h1').textContent = 'Hello, DOM!';
+    </script>
+</body>
+</html>

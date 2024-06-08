@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM操作の例</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 20px;
+            position: relative;
+        }
+        h1, h2 {
+            color: #4682b4;
+        }
+        .example {
+            border: 1px solid #4682b4;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+        .result {
+            font-weight: bold;
+        }
+        .result p {
+            margin: 0;
+            padding: 5px;
+        }
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple-animation 600ms linear;
+            background: rgba(0, 0, 255, 0.5);
+        }
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>DOM操作の例</h1>
+    <div class="example" id="example">
+        <p>元のパラグラフ</p>
+    </div>
+    <button id="modifyButton">変更する</button>
+    <button id="removeListenerButton">イベントリスナー削除</button>
+
+    <div class="example">
+        <h2>DOM属性の結果</h2>
+        <div id="dom-properties" class="result"></div>
+    </div>
+
+    <div class="example">
+        <h2>DOMメソッドの結果</h2>
+        <div id="dom-methods" class="result"></div>
+    </div>
+
+    <script>
+        let handler;
+
+        function createRipple(event) {
+            const circle = document.createElement('div');
+            circle.classList.add('ripple');
+            document.body.appendChild(circle);
+
+            const size = Math.max(window.innerWidth, window.innerHeight);
+            circle.style.width = circle.style.height = `${size}px`;
+            circle.style.left = `${event.clientX - size / 2}px`;
+            circle.style.top = `${event.clientY - size / 2}px`;
+
+            setTimeout(() => {
+                circle.remove();
+            }, 600);
+        }
+
+        document.getElementById('modifyButton').addEventListener('click', function() {
+            let element = document.getElementById('example');
+
+            // innerHTMLの操作
+            element.innerHTML = '<p>変更された内容</p>';
+
+            // 新しい要素の作成と追加
+            let newElement = document.createElement('p');
+            newElement.textContent = '新しいパラグラフ';
+            element.appendChild(newElement);
+
+            // 属性の操作
+            element.setAttribute('data-example', 'modified');
+            element.className = 'modified-class';
+            element.id = 'modified-id';
+
+            // イベントリスナーの追加
+            handler = function(event) {
+                createRipple(event);
+            };
+            document.body.addEventListener('click', handler);
+
+            // DOMの属性の結果を表示
+            document.getElementById('dom-properties').innerHTML = `
+                <p>nodeName: ${element.nodeName}</p>
+                <p>nodeType: ${element.nodeType}</p>
+                <p>nodeValue: ${element.nodeValue}</p>
+                <p>innerHTML: ${element.innerHTML}</p>
+                <p>outerHTML: ${element.outerHTML}</p>
+                <p>textContent: ${element.textContent}</p>
+                <p>attributes: ${Array.from(element.attributes).map(attr => attr.name + '="' + attr.value + '"').join(', ')}</p>
+                <p>childNodes: ${Array.from(element.childNodes).map(node => node.nodeName).join(', ')}</p>
+                <p>firstChild: ${element.firstChild.nodeName}</p>
+                <p>lastChild: ${element.lastChild.nodeName}</p>
+                <p>parentNode: ${element.parentNode.nodeName}</p>
+                <p>nextSibling: ${element.nextSibling}</p>
+                <p>previousSibling: ${element.previousSibling}</p>
+                <p>className: ${element.className}</p>
+                <p>id: ${element.id}</p>
+            `;
+
+            // DOMのメソッドの結果を表示
+            document.getElementById('dom-methods').innerHTML = `
+                <p><strong>getElementById:</strong> <span>指定したID属性を持つ要素を取得します。</span></p>
+                <p>${document.getElementById('modified-id').outerHTML}</p>
+                <p><strong>getElementsByTagName:</strong> <span>指定したタグ名を持つ要素のリストを取得します。</span></p>
+                <p>${Array.from(document.getElementsByTagName('p')).map(p => p.outerHTML).join(', ')}</p>
+                <p><strong>getElementsByClassName:</strong> <span>指定したクラス名を持つ要素のリストを取得します。</span></p>
+                <p>${Array.from(document.getElementsByClassName('modified-class')).map(el => el.outerHTML).join(', ')}</p>
+                <p><strong>querySelector:</strong> <span>指定したCSSセレクタに一致する最初の要素を取得します。</span></p>
+                <p>${document.querySelector('.modified-class').outerHTML}</p>
+                <p><strong>querySelectorAll:</strong> <span>指定したCSSセレクタに一致する全ての要素のリストを取得します。</span></p>
+                <p>${Array.from(document.querySelectorAll('.modified-class')).map(el => el.outerHTML).join(', ')}</p>
+                <p><strong>appendChild:</strong> <span>指定したノードを子ノードリストの末尾に追加します。</span></p>
+                <p>${element.outerHTML}</p>
+                <p><strong>removeChild:</strong> <span>指定した子ノードを削除します。</span></p>
+                <p>${(() => {
+                    let removedElement = element.removeChild(newElement);
+                    return `削除された要素: ${removedElement.outerHTML}`;
+                })()}</p>
+                <p><strong>replaceChild:</strong> <span>指定した子ノードを新しいノードに置き換えます。</span></p>
+                <p>${(() => {
+                    let anotherElement = document.createElement('span');
+                    anotherElement.textContent = '置き換えられた要素';
+                    let replacedElement = element.replaceChild(anotherElement, element.firstChild);
+                    return `置き換えられた要素: ${replacedElement.outerHTML}`;
+                })()}</p>
+                <p><strong>insertBefore:</strong> <span>指定した参照ノードの前に新しいノードを挿入します。</span></p>
+                <p>${(() => {
+                    let beforeElement = document.createElement('div');
+                    beforeElement.textContent = '参照ノードの前に挿入された要素';
+                    element.insertBefore(beforeElement, element.firstChild);
+                    return element.outerHTML;
+                })()}</p>
+                <p><strong>createElement:</strong> <span>指定したタグ名の新しい要素を作成します。</span></p>
+                <p>${(() => {
+                    let createdElement = document.createElement('section');
+                    createdElement.textContent = '新しく作成された要素';
+                    return createdElement.outerHTML;
+                })()}</p>
+                <p><strong>createTextNode:</strong> <span>指定したテキストを持つ新しいテキストノードを作成します。</span></p>
+                <p>${(() => {
+                    let textNode = document.createTextNode('Hello World');
+                    return textNode.nodeValue;
+                })()}</p>
+                <p><strong>setAttribute:</strong> <span>指定した属性を設定します。</span></p>
+                <p>${(() => {
+                    element.setAttribute('data-new', 'newValue');
+                    return element.outerHTML;
+                })()}</p>
+                <p><strong>getAttribute:</strong> <span>指定した属性の値を取得します。</span></p>
+                <p>${element.getAttribute('data-new')}</p>
+                <p><strong>removeAttribute:</strong> <span>指定した属性を削除します。</span></p>
+                <p>${(() => {
+                    element.removeAttribute('data-new');
+                    return element.outerHTML;
+                })()}</p>
+                <p><strong>addEventListener:</strong> <span>指定したイベントが発生したときに呼び出される関数を追加します。</span></p>
+                <p>クリックイベントが追加されました（実際にクリックして確認してください）。</p>
+            `;
+        });
+
+        document.getElementById('removeListenerButton').addEventListener('click', function() {
+            document.body.removeEventListener('click', handler);
+            alert('クリックイベントが削除されました。クリックしても反応しません。');
+        });
+    </script>
+</body>
+</html>

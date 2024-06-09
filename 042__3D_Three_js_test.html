@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>JavaScriptの3D表示例（Three.js）</title>
+  <style>
+    body { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0; 
+      margin: 0; 
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    .description-container {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-gap: 20px;
+      width: 80%;
+    }
+    .grid-item {
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    canvas { 
+      margin-bottom: 20px;
+      max-width: 100%;
+    }
+    .description {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .code {
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+      white-space: pre-wrap;
+      margin-top: 10px;
+    }
+    #3dCanvas {
+      width: 100%;
+      height: 300px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>JavaScriptの3D表示例（Three.js）</h1>
+  <div class="description-container">
+    <p>Three.jsを使用して3Dオブジェクトを描画する方法を説明します。</p>
+  </div>
+  <div class="grid-container">
+    <div class="grid-item">
+      <canvas id="3dCanvas"></canvas>
+      <div class="description">
+        Three.jsを使って3Dシーンを作成し、立方体を描画します。<br>
+        <strong>技術:</strong> シーンの作成、カメラの設定、レンダラーの設定、立方体の作成、アニメーションの実装
+        <div class="code">
+          // シーンの作成<br>
+          const scene = new THREE.Scene();<br><br>
+          
+          // カメラの設定<br>
+          // THREE.PerspectiveCamera(fov, aspect, near, far)<br>
+          // fov: 視野角, aspect: アスペクト比, near: カメラからの最短距離, far: カメラからの最長距離<br>
+          const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);<br>
+          camera.position.z = 5;<br><br>
+          
+          // レンダラーの設定<br>
+          const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('3dCanvas') });<br>
+          renderer.setSize(window.innerWidth * 0.8, 300);<br><br>
+          
+          // 立方体の作成<br>
+          const geometry = new THREE.BoxGeometry();<br>
+          const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });<br>
+          const cube = new THREE.Mesh(geometry, material);<br>
+          scene.add(cube);<br><br>
+          
+          // エッジの作成<br>
+          const edges = new THREE.EdgesGeometry(geometry);<br>
+          const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });<br>
+          const line = new THREE.LineSegments(edges, lineMaterial);<br>
+          scene.add(line);<br><br>
+          
+          // アニメーションの実装<br>
+          function animate() {<br>
+            requestAnimationFrame(animate);<br>
+            cube.rotation.x += 0.01; // 立方体をx軸で回転<br>
+            cube.rotation.y += 0.01; // 立方体をy軸で回転<br>
+            line.rotation.x += 0.01; // エッジをx軸で回転<br>
+            line.rotation.y += 0.01; // エッジをy軸で回転<br>
+            renderer.render(scene, camera); // シーンとカメラをレンダリング<br>
+          }<br>
+          animate();
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // シーンの作成
+    const scene = new THREE.Scene();
+
+    // カメラの設定
+    // THREE.PerspectiveCamera(fov, aspect, near, far)
+    // fov: 視野角, aspect: アスペクト比, near: カメラからの最短距離, far: カメラからの最長距離
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 3;
+
+    // レンダラーの設定
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('3dCanvas') });
+    renderer.setSize(window.innerWidth * 0.8, 300);
+
+    // 立方体の作成
+    const geometry = new THREE.BoxGeometry();
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+
+    // エッジの作成
+    const edges = new THREE.EdgesGeometry(geometry);
+    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+    const line = new THREE.LineSegments(edges, lineMaterial);
+    scene.add(line);
+
+    // アニメーションの実装
+    function animate() {
+      requestAnimationFrame(animate);
+      cube.rotation.x += 0.003; // 立方体をx軸で回転
+      cube.rotation.y += 0.02; // 立方体をy軸で回転
+      line.rotation.x += 0.003; // エッジをx軸で回転
+      line.rotation.y += 0.02; // エッジをy軸で回転
+      renderer.render(scene, camera); // シーンとカメラをレンダリング
+    }
+    animate();
+  </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>JavaScriptのCanvas表示例</title>
+  <style>
+    body { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0; 
+      margin: 0; 
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    .coordinates {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-gap: 20px;
+      width: 80%;
+    }
+    .grid-item {
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    canvas { 
+      margin-bottom: 20px;
+    }
+    .description {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .code {
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+      white-space: pre-wrap;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>JavaScriptのCanvas表示例</h1>
+  <div class="coordinates">
+    <p>原点：画面の左上</p>
+    <p>X座標：画面の右向き</p>
+    <p>Y座標：画面の下向き</p>
+  </div>
+  <div class="grid-container">
+    <div class="grid-item">
+      <canvas id="fillRectCanvas" width="400" height="200"></canvas>
+      <div class="description">
+        矩形（塗りつぶし）: fillRectメソッドを使って、指定した位置とサイズの矩形を塗りつぶしで描画します。
+        <div class="code">
+          fillRectCtx.fillStyle = 'blue';<br>
+          fillRectCtx.fillRect(50, 50, 300, 100);
+        </div>
+      </div>
+    </div>
+    <div class="grid-item">
+      <canvas id="strokeRectCanvas" width="400" height="200"></canvas>
+      <div class="description">
+        矩形（枠のみ）: strokeRectメソッドを使って、指定した位置とサイズの矩形を枠だけで描画します。
+        <div class="code">
+          strokeRectCtx.strokeStyle = 'black';<br>
+          strokeRectCtx.strokeRect(50, 50, 300, 100);
+        </div>
+      </div>
+    </div>
+    <div class="grid-item">
+      <canvas id="circleCanvas" width="400" height="200"></canvas>
+      <div class="description">
+        円（塗りつぶし）: arcメソッドとfillメソッドを使って、指定した位置と半径の円を塗りつぶしで描画します。<br>
+        <strong>パラメーター:</strong> context.arc(x, y, radius, startAngle, endAngle, anticlockwise)<br>
+        x: 円の中心の x 座標, y: 円の中心の y 座標, radius: 円の半径<br>
+        startAngle: 円弧の開始角度（ラジアンで指定）, endAngle: 円弧の終了角度（ラジアンで指定）, anticlockwise: 円弧を描く方向（省略可能）
+        <div class="code">
+          circleCtx.beginPath();<br>
+          circleCtx.arc(200, 100, 50, 0, Math.PI * 2, false);<br>
+          circleCtx.fillStyle = 'red';<br>
+          circleCtx.fill();
+        </div>
+      </div>
+    </div>
+    <div class="grid-item">
+      <canvas id="ellipseCanvas" width="400" height="200"></canvas>
+      <div class="description">
+        楕円（枠のみ）: ellipseメソッドとstrokeメソッドを使って、指定した位置とサイズの楕円を枠だけで描画します。<br>
+        楕円は、内接する四角形（バウンディングボックス）を指定して描画します。内接する四角形が決まると、その4点を通る楕円は一つだけ決定されます。<br>
+        <strong>パラメーター:</strong> context.ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise)<br>
+        x: 楕円の中心の x 座標, y: 楕円の中心の y 座標, radiusX: 楕円の x 軸方向の半径, radiusY: 楕円の y 軸方向の半径<br>
+        rotation: 楕円の回転角度（ラジアンで指定）, startAngle: 楕円弧の開始角度（ラジアンで指定）, endAngle: 楕円弧の終了角度（ラジアンで指定）, anticlockwise: 楕円弧を描く方向（省略可能）
+        <div class="code">
+          ellipseCtx.beginPath();<br>
+          ellipseCtx.ellipse(200, 100, 100, 50, 0, 0, Math.PI * 2);<br>
+          ellipseCtx.strokeStyle = 'green';<br>
+          ellipseCtx.stroke();
+        </div>
+      </div>
+    </div>
+    <div class="grid-item">
+      <canvas id="lineCanvas" width="400" height="200"></canvas>
+      <div class="description">
+        直線: moveToメソッドとlineToメソッドを使って、指定した開始点から終了点までの直線を描画します。
+        <div class="code">
+          lineCtx.beginPath();<br>
+          lineCtx.moveTo(50, 150);<br>
+          lineCtx.lineTo(350, 50);<br>
+          lineCtx.strokeStyle = 'purple';<br>
+          lineCtx.lineWidth = 5;<br>
+          lineCtx.stroke();
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 矩形（塗りつぶし）Canvas
+    const fillRectCanvas = document.getElementById('fillRectCanvas');
+    const fillRectCtx = fillRectCanvas.getContext('2d');
+    fillRectCtx.fillStyle = 'blue';
+    fillRectCtx.fillRect(50, 50, 300, 100);
+
+    // 矩形（枠のみ）Canvas
+    const strokeRectCanvas = document.getElementById('strokeRectCanvas');
+    const strokeRectCtx = strokeRectCanvas.getContext('2d');
+    strokeRectCtx.strokeStyle = 'black';
+    strokeRectCtx.strokeRect(50, 50, 300, 100);
+
+    // 円（塗りつぶし）Canvas
+    const circleCanvas = document.getElementById('circleCanvas');
+    const circleCtx = circleCanvas.getContext('2d');
+    circleCtx.beginPath();
+    circleCtx.arc(200, 100, 50, 0, Math.PI * 2, false);
+    circleCtx.fillStyle = 'red';
+    circleCtx.fill();
+
+    // 楕円（枠のみ）Canvas
+    const ellipseCanvas = document.getElementById('ellipseCanvas');
+    const ellipseCtx = ellipseCanvas.getContext('2d');
+    ellipseCtx.beginPath();
+    ellipseCtx.ellipse(200, 100, 100, 50, 0, 0, Math.PI * 2);
+    ellipseCtx.strokeStyle = 'green';
+    ellipseCtx.stroke();
+
+    // 直線Canvas
+    const lineCanvas = document.getElementById('lineCanvas');
+    const lineCtx = lineCanvas.getContext('2d');
+    lineCtx.beginPath();
+    lineCtx.moveTo(50, 150);
+    lineCtx.lineTo(350, 50);
+    lineCtx.strokeStyle = 'purple';
+    lineCtx.lineWidth = 5;
+    lineCtx.stroke();
+  </script>
+</body>
+</html>
